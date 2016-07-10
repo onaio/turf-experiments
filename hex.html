@@ -7,6 +7,7 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
+
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -24,20 +25,23 @@ var cellWidth = 25;
 var units = 'kilometers';
 
 var hexgrid = turf.hexGrid(bbox, cellWidth, units);
+//var grid = turf.count(grid, pts, 'pt_count');
 //var hexgrid = turf.hexGrid([39.792, 12.147, 51.768, -1.889], 50, "kilometers")
 //var hexgrid = turf.hex([-115.52, 25.460, -87.5, 45.468], .5);
 
 hexgrid.features.map(function(grid) {
     grid.properties = {
-        "fill": "#25561F",
-        "stroke": "#25561F",
+
         "stroke-width": 1
     };
     return grid;
 });
 
+
 //console.log(JSON.stringify(hexgrid));
 
+var tpm_url = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/tpm.geojson';
+var tpm_csv = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/tpm_activities.csv';
 
 
 
@@ -48,10 +52,12 @@ var map = new mapboxgl.Map({
     zoom: 5 // starting zoom
 });
 
+
 map.on('load', function () {
       map.addSource('somhex', {
         'type': 'geojson',
-        'data': hexgrid}
+        'data': hexgrid
+      }
       );
       map.addLayer({
           'id': 'route',
@@ -63,8 +69,23 @@ map.on('load', function () {
           }
       });
 
+      map.addSource('tpm_data', {
+        type: 'geojson',
+        data: tpm_url
+      });
 
+    map.addLayer({
+        'id': 'tpm_data',
+        'type': 'circle',
+        'source': 'tpm_data',
+        'paint': {
+          'circle-color': '#334d4d',
+          'circle-radius': 3
+        }
+
+      });
     });
+
 
 
 
