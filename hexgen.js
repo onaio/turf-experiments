@@ -2,9 +2,13 @@ var turf = require('turf');
 var fs = require('fs');
 
 var bbox = [40.21,-2.54,52.69,12.46];
-var cellWidth = 20;
+var cellWidth = 25;
 var units = 'kilometers';
+
+var sombuf = fs.readFileSync('./data/sombuf.json');
 
 var hexgrid = turf.hexGrid(bbox, cellWidth, units);
 
-fs.writeFileSync('./hex20.geojson', JSON.stringify(hexgrid));
+var sombufhex = turf.intersect(sombuf, hexgrid);
+
+fs.writeFileSync('./sombufhex25.geojson', JSON.stringify(sombufhex));
