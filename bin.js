@@ -2,12 +2,12 @@ var turf = require('turf');
 var fs = require('fs');
 
 var bbox = [40.21,-2.54,52.69,12.46];
-var cellWidth = 20;
+var cellWidth = 25;
 var units = 'kilometers';
 
 var hexgrid = turf.hexGrid(bbox, cellWidth, units);
 
-fs.writeFileSync('./hex20.geojson', JSON.stringify(hexgrid));
+fs.writeFileSync('./hex25.geojson', JSON.stringify(hexgrid));
 
 // var tpm_points = fs.readFileSync('./data/tpm.geojson');
 

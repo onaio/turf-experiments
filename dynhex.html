@@ -6,8 +6,8 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
-    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js'></script> 
- <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script> -->
+    <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js'></script>  -->
+ <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script> 
 
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
 
@@ -79,13 +79,17 @@ d3.json(tpm_url, function (error, tpm_data) {
   d3.json('./data/sombuf.json', function (error, bufhex) {
     //console.log(JSON.stringify(bufhex));
 
-     // var cliphexgrid = turf.intersect(bufhex,hexgrid);
+    // This is what needs to work v
+
+     var cliphexgrid = turf.intersect(bufhex,hexgrid);
 
      // aggregate is for turf 2.0
-      var hexagg = turf.aggregate(hexgrid,tpm_data,aggregations);
+
+      //var hexagg = turf.aggregate(hexgrid,tpm_data,aggregations);
 
       // collect is for turf 3.0
-      //var hexagg = turf.collect(hexgrid,tpm_data,'','point_count');
+      
+      var hexagg = turf.collect(cliphexgrid,tpm_data,'','point_count');
       //console.log(JSON.stringify(hexagg));
 
 
