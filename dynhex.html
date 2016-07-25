@@ -6,8 +6,8 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
-    <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js'></script>  -->
- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script> 
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js'></script>  
+ <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>  -->
 
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
 
@@ -28,7 +28,7 @@ var bbox = [40.21,-2.54,52.69,12.46];
 var cellWidth = 50;
 var units = 'kilometers';
 
-var hexgrid = turf.hexGrid(bbox, cellWidth, units);
+//var hexgrid = turf.hexGrid(bbox, cellWidth, units);
 //var grid = turf.count(grid, pts, 'pt_count');
 //var hexgrid = turf.hexGrid([39.792, 12.147, 51.768, -1.889], 50, "kilometers")
 //var hexgrid = turf.hex([-115.52, 25.460, -87.5, 45.468], .5);
@@ -47,6 +47,7 @@ hexgrid.features.map(function(grid) {
 //var hex_url = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/somhex20.geojson';
 var tpm_url = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/tpm.geojson';
 var tpm_csv = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/tpm_activities.csv';
+var somhexbin_url = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/sombuf-hex25.geojson';
 
 
 var map = new mapboxgl.Map({
@@ -76,20 +77,20 @@ var aggregations = [
 
 
 d3.json(tpm_url, function (error, tpm_data) {
-  d3.json('./data/sombuf.json', function (error, bufhex) {
+  d3.json(somhexbin_url, function (error, bufhex) {
     //console.log(JSON.stringify(bufhex));
 
     // This is what needs to work v
 
-     var cliphexgrid = turf.intersect(bufhex,hexgrid);
+     //var cliphexgrid = turf.intersect(bufhex,hexgrid);
 
      // aggregate is for turf 2.0
 
-      //var hexagg = turf.aggregate(hexgrid,tpm_data,aggregations);
+      var hexagg = turf.aggregate(bufhex,tpm_data,aggregations);
 
       // collect is for turf 3.0
       
-      var hexagg = turf.collect(cliphexgrid,tpm_data,'','point_count');
+      //var hexagg = turf.collect(bufhex,tpm_data,'','point_count');
       //console.log(JSON.stringify(hexagg));
 
 
