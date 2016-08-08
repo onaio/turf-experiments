@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Somalia</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.11.4/mapbox-gl.js'></script>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js">
+    </script>
+
+    <script type="text/javascript" src="js/geojson.min.js"></script>
+    
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.11.4/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoib25hIiwiYSI6IlVYbkdyclkifQ.0Bz-QOOXZZK01dq4MuMImQ';
+
+
+function transformDataset(dataset) {
+
+
+     var transformedDataset = dataset.feed.entry.map(function(entry){
+
+
+      var contentString = entry.content.$t;
+      var contentFields = contentString.split(',');
+      var content = {};
+      contentFields.forEach(function(field) {
+       var fieldParts = field.split(':')
+       content[fieldParts[0].trim()] = fieldParts[1].trim();
+
+
+
+
+    content.latitude = Number.parseFloat(content.latitude);
+    content.longitude = Number.parseFloat(content.longitude);
+
+
+
+   
+
+   
+
+
+      })
+
+
+
+
+
+    
+
+
+
+  return content;
+
+
+
+ });
+
+
+return transformedDataset;
+
+}
+
+
+
+$.getJSON ( "https://spreadsheets.google.com/feeds/list/1x3riTR0U7Hzdmp09wytjBen8Jh6cEPWYNYHI673n6o4/1/public/basic?alt=json", function( data ) {
+
+
+
+  var transformedDataset = transformDataset(data);
+
+
+
+    transformedDataset = transformedDataset.filter(function(val){
+
+
+
+
+
+
+     return !isNaN(val.longitude) && !isNaN(val.latitude)
+
+
+
+
+      })
+    // transformedDataset = transformedDataset.slice(0,101 )
+
+    GeoJSON.parse(transformedDataset,{Point: ['latitude', 'longitude']}, function(geojson) {
+
+         var locations = geojson;
+
+
+
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/streets-v9',
+  center: [41.7035862, 5.1584164],
+  zoom: 5
+});
+
+map.on('load', function() {
+   map.addSource("terrain-data", {
+       "type": "geojson",
+       "data": locations
+   });
+
+   //console.log(locations);
+
+   // Once you have a datasource defined, you need to add a layer from that data source to the map.
+   // We could, for example, add only earthquakes magnitude 4.0+. Here we just tell it
+   // to take all of the data and style it as a circle.
+   map.addLayer({
+     "id": "terrain-data", // An id for this layer
+     "type": "circle", // As a point layer, we need style a symbol for each point.
+     "source": "terrain-data", // The source layer we defined above
+     "paint": {
+         "circle-radius": 5,
+         "circle-color": "#ff0000"
+     },
+     "layout": {"visibility": "visible"},
+   });
+});
+
+});
+
+
+});
+
+
+</script>
+
+</body>
+</html>

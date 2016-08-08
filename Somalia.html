@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>
+    Somalia
+    </title>
+    <meta content="initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport"/>
+    <link href="https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.css" rel="stylesheet"/>
+    <script src="https://api.mapbox.com/mapbox.js/v2.2.4/mapbox.js">
+    </script>
+    <script src="https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js">
+    </script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js">
+    </script>
+
+
+    <script type="text/javascript" src="js/geojson.min.js"></script>
+    <style>
+    body { margin: 0; padding: 0; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map">
+    </div>
+    <script>
+    L.mapbox.accessToken = 'pk.eyJ1Ijoib25hIiwiYSI6IlVYbkdyclkifQ.0Bz-QOOXZZK01dq4MuMImQ';
+    //var tpm_url = 'https://raw.githubusercontent.com/onaio/turf-experiments/gh-pages/data/tpm.geojson';
+
+
+    function transformDataset(dataset) {
+
+
+     var transformedDataset = dataset.feed.entry.map(function(entry){
+
+
+      var contentString = entry.content.$t;
+      var contentFields = contentString.split(',');
+      var content = {};
+      contentFields.forEach(function(field) {
+       var fieldParts = field.split(':')
+       content[fieldParts[0].trim()] = fieldParts[1].trim();
+
+
+
+
+    content.latitude = Number.parseFloat(content.latitude);
+    content.longitude = Number.parseFloat(content.longitude);
+
+
+
+   
+
+   
+
+
+      })
+
+
+
+
+
+    
+
+
+
+  return content;
+
+
+
+ });
+
+
+ return transformedDataset;
+}
+
+
+
+
+
+
+
+
+    $.getJSON ( "https://spreadsheets.google.com/feeds/list/1x3riTR0U7Hzdmp09wytjBen8Jh6cEPWYNYHI673n6o4/1/public/basic?alt=json", function( data ) {
+
+
+
+        
+
+
+    var transformedDataset = transformDataset(data);
+
+
+
+    transformedDataset = transformedDataset.filter(function(val){
+
+
+
+
+
+
+     return !isNaN(val.longitude) && !isNaN(val.latitude)
+
+
+
+
+      })
+    // transformedDataset = transformedDataset.slice(0,101 )
+
+    GeoJSON.parse(transformedDataset,{Point: ['latitude', 'longitude']}, function(geojson) {
+
+         var locations = geojson;
+
+        /* if(isNaN(locations.features[i].geometry.coordinates[0]) || isNaN(locations.features[i].geometry.coordinates[1])){
+
+        
+        
+
+        console.log(JSON.stringify(locations.features[i]));
+
+
+        locations.features.splice(i,1);
+
+
+
+  }*/
+
+
+
+  //console.log(JSON.stringify(locations));
+
+
+
+
+
+
+         
+
+
+
+
+    for(var i = 0; i<locations.features.length; i++) {
+
+
+
+    locations.features[i].properties['marker-color'] = '#DC143C';
+    locations.features[i].properties['marker-symbol'] = '';
+    locations.features[i].properties['marker-size'] = 'small';
+
+
+
+    };
+
+
+
+    var map = L.mapbox.map('map', 'mapbox.light')
+    .setView([6.076855,47.041637],5);
+
+    //disable zooming in/out using mouse
+    map.scrollWheelZoom.disable();
+
+
+
+    var locationsLayer = L.mapbox.featureLayer(locations)
+    .addTo(map);
+
+
+
+
+    map.fitBounds(locationsLayer.getBounds());
+
+
+    // Bind a popup to each feature in locationsLayer
+    locationsLayer.eachLayer(function (layer) {
+    layer.bindPopup('<strong>' + layer.feature.geometry.coordinates+ '</strong>', { closeButton: false });
+    }).addTo(map);
+
+
+
+
+
+    // Open popups on hover
+    locationsLayer.on('mouseover', function (e) {
+    e.layer.openPopup();
+
+
+
+            });
+
+            
+
+         
+
+         
+        
+
+
+
+
+    });
+    
+    //console.log(JSON.stringify(geojson, null, 4));
+});
+
+
+
+
+
+   
+    </script>
+  </body>
+</html>
