@@ -62,7 +62,7 @@
 
         var map = new mapboxgl.Map({
             container: 'map', // container id
-            style: 'mapbox://styles/mapbox/light-v9', //stylesheet location
+            style: 'mapbox://styles/mapbox/dark-v9', //stylesheet location
             center: [44, 3], // starting position
             zoom: 5.5 // starting zoom
         });
@@ -113,7 +113,7 @@
                     'source': 'tpm_data',
                     'paint': {
                         'circle-opacity': 1,
-                        'circle-color': '#334d4d',
+                        'circle-color': '#FFFFFF',
                         'circle-radius': 2
                     }
                 }, 'waterway-label');
@@ -130,14 +130,16 @@
                         'type': 'fill',
                         'source': 'somhex',
                         'paint': {
-                            'fill-outline-color': '#ccc',
+                            'fill-outline-color': '#595959',
                             'fill-color': {
                                 property: 'point_count',
                                 stops: [
                                         [0, 'transparent'],
-                                        [1, '#eff3ff'],
-                                        [100, '#08519c']
+                                        [1, '#333333'],
+                                        [100, '#eff3ff']
                                     ] // #f00
+
+                                  //  '#eff3ff'
 
                             },
                             'fill-opacity': 0.7
